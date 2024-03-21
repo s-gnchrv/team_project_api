@@ -31,6 +31,9 @@ class ViolationTypeSerializer(serializers.ModelSerializer):
 
 class ViolationSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source='creator.id')
+    type = ViolationTypeSerializer()
+    project = ProjectSerializer()
+    organization = OrganizationSerializer()
 
     class Meta:
         model = models.Violation
@@ -39,6 +42,8 @@ class ViolationSerializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source='creator.id')
+    violation = ViolationSerializer()
+    organization = OrganizationSerializer()
 
     class Meta:
         model = models.Task
