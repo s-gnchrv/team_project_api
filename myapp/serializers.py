@@ -1,21 +1,42 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from . import models
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    @classmethod
+    def get_token(cls, user):
+        token = super(MyTokenObtainPairSerializer, cls).get_token(user)
+
+        # Add custom claims
+        token['groups'] = list(user.groups.values_list('name', flat=True))
+        return token
 
 
 class UserSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
     phone = serializers.SerializerMethodField()
+    groups = serializers.SerializerMethodField()
 
     def get_full_name(self, obj):
-        return obj.profile.full_name
+        if hasattr(obj, 'profile'):
+            return obj.profile.full_name
+        return None
 
     def get_phone(self, obj):
-        return obj.profile.phone
+        if hasattr(obj, 'profile'):
+            return obj.profile.phone
+        return None
+
+    def get_groups(self, obj):
+        return list(obj.groups.values_list('name', flat=True))
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'full_name', 'phone')
+        fields = ('id', 'username', 'full_name', 'phone', 'groups')
 
 
 class ProjectSerializer(serializers.ModelSerializer):

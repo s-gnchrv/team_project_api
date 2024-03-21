@@ -3,6 +3,8 @@ from django.db.models import Q
 from django.shortcuts import render
 from django_filters.rest_framework import filters
 from rest_framework import generics
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from . import models
 from . import serializers
 from rest_framework import permissions
@@ -10,7 +12,15 @@ from .permissions import IsContactor, IsRepresentative, IsRepresentativeAndCreat
     IsCreatorOrExecutor, IsAuthorOrReadOnly
 
 
+from .serializers import MyTokenObtainPairSerializer
+
+
 # Create your views here.
+class MyObtainTokenPairView(TokenObtainPairView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = MyTokenObtainPairSerializer
+
+
 class ProjectList(generics.ListAPIView):
     queryset = models.Project.objects.all()
     serializer_class = serializers.ProjectSerializer
@@ -106,6 +116,12 @@ class AttachmentDetail(generics.RetrieveDestroyAPIView):
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
+
+    def get_queryset(self):
+        group = self.request.query_params.get('group')
+        if group:
+            return User.objects.filter(groups__name=group)
+        return User.objects.all()
 
 
 class UserDetail(generics.RetrieveAPIView):
