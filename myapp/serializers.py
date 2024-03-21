@@ -4,9 +4,18 @@ from . import models
 
 
 class UserSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+    phone = serializers.SerializerMethodField()
+
+    def get_full_name(self, obj):
+        return obj.profile.full_name
+
+    def get_phone(self, obj):
+        return obj.profile.phone
+
     class Meta:
         model = User
-        fields = ('id', 'username')
+        fields = ('id', 'username', 'full_name', 'phone')
 
 
 class ProjectSerializer(serializers.ModelSerializer):
