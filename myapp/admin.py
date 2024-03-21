@@ -16,6 +16,7 @@ class CommentAdmin(admin.ModelAdmin):
     readonly_fields = ('date',)
 
 
+admin.site.register(models.Profile)
 admin.site.register(models.Project)
 admin.site.register(models.Organization)
 admin.site.register(models.ViolationType)
