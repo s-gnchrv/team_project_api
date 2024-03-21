@@ -7,6 +7,7 @@ class Profile(models.Model):
         verbose_name = 'Данные пользователя'
         verbose_name_plural = 'Данные пользователей'
 
+    user = models.ForeignKey('auth.User', verbose_name='Пользователь', on_delete=models.CASCADE)
     full_name = models.CharField(verbose_name='ФИО')
     phone = models.CharField(verbose_name='Номер телефона')
 
