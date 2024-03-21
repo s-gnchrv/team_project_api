@@ -2,6 +2,15 @@ from django.db import models
 
 
 # Create your models here.
+class Profile(models.Model):
+    class Meta:
+        verbose_name = 'Данные пользователя'
+        verbose_name_plural = 'Данные пользователей'
+
+    full_name = models.CharField(verbose_name='ФИО')
+    phone = models.CharField(verbose_name='Номер телефона')
+
+
 class Project(models.Model):
     class Meta:
         verbose_name = 'Объект строительства'
