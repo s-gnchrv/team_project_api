@@ -71,7 +71,7 @@ class TaskList(generics.ListCreateAPIView):
     # queryset = models.Task.objects.all()
     serializer_class = serializers.TaskSerializer
     filterset_fields = ['violation', 'status']
-    permission_classes = [IsRepresentativeOrReadOnly]
+    permission_classes = [IsRepresentativeOrReadOnly, permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
