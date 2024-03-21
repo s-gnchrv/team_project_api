@@ -3,6 +3,12 @@ from rest_framework import serializers
 from . import models
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')
+
+
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Project
@@ -10,6 +16,8 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
+    representative = UserSerializer()
+
     class Meta:
         model = models.Organization
         fields = '__all__'
@@ -49,7 +57,4 @@ class AttachmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username')
+

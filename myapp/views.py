@@ -1,11 +1,13 @@
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.shortcuts import render
 from django_filters.rest_framework import filters
 from rest_framework import generics
 from . import models
 from . import serializers
 from rest_framework import permissions
-from .permissions import IsTest
+from .permissions import IsContactor, IsRepresentative, IsRepresentativeAndCreator, IsRepresentativeOrReadOnly, \
+    IsCreatorOrExecutor, IsAuthorOrReadOnly
 
 
 # Create your views here.
@@ -38,7 +40,7 @@ class ViolationList(generics.ListCreateAPIView):
     # queryset = models.Violation.objects.all()
     serializer_class = serializers.ViolationSerializer
     filterset_fields = ['project', 'status']
-    # permission_classes = [IsTest]
+    permission_classes = [IsRepresentative]
 
     def get_queryset(self):
         user = self.request.user
@@ -49,9 +51,22 @@ class ViolationList(generics.ListCreateAPIView):
         serializer.save(creator=self.request.user)
 
 
+class ViolationDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.Violation.objects.all()
+    serializer_class = serializers.ViolationSerializer
+    permission_classes = [IsRepresentativeAndCreator]
+
+
 class TaskList(generics.ListCreateAPIView):
-    queryset = models.Task.objects.all()
+    # queryset = models.Task.objects.all()
     serializer_class = serializers.TaskSerializer
+    filterset_fields = ['violation', 'status']
+    permission_classes = [IsRepresentativeOrReadOnly]
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = models.Task.objects.filter(Q(creator=user) | Q(executor=user))
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
@@ -60,10 +75,11 @@ class TaskList(generics.ListCreateAPIView):
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Task.objects.all()
     serializer_class = serializers.TaskSerializer
+    permission_classes = [IsCreatorOrExecutor]
 
 
 class CommentList(generics.ListCreateAPIView):
-    queryset = models.Comment.objects.all()
+    # queryset = models.Comment.objects.all()
     serializer_class = serializers.CommentSerializer
 
     def get_queryset(self):
@@ -74,6 +90,7 @@ class CommentList(generics.ListCreateAPIView):
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Comment.objects.all()
     serializer_class = serializers.CommentSerializer
+    permission_classes = [IsAuthorOrReadOnly]
 
 
 class AttachmentList(generics.ListCreateAPIView):
