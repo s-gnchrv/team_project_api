@@ -1,5 +1,6 @@
 .idea
 myapp/migrations
+api/settings.py
 
 # Django #
 *.log
