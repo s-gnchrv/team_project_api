@@ -72,6 +72,7 @@ class ViolationSerializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source='creator.id')
+    executor = UserSerializer()
     violation = ViolationSerializer()
     organization = OrganizationSerializer()
 
@@ -89,7 +90,8 @@ class CommentSerializer(serializers.ModelSerializer):
 class AttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Attachment
-        fields = '__all__'
+        fields = ('file',)
+
 
 
 

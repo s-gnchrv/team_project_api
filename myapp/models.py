@@ -125,7 +125,7 @@ class Attachment(models.Model):
         verbose_name = 'Вложение'
         verbose_name_plural = 'Вложения'
 
-    file = models.FileField(verbose_name='Файл')
+    file = models.FileField(verbose_name='Файл', upload_to='attachments/')
     violation = models.ForeignKey(Violation, verbose_name='Нарушение', on_delete=models.CASCADE, null=True, blank=True)
     task = models.ForeignKey(Task, verbose_name='Задание', on_delete=models.CASCADE, null=True, blank=True)
     comment = models.ForeignKey(Comment, verbose_name='Комментарий', on_delete=models.CASCADE, null=True, blank=True)
