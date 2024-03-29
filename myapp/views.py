@@ -96,6 +96,9 @@ class CommentList(generics.ListCreateAPIView):
         task_id = self.kwargs['task']
         return models.Comment.objects.filter(task=task_id)
 
+    # def perform_create(self, serializer):
+        # serializer.save(task_id=self.kwargs['task'])
+
 
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Comment.objects.all()
@@ -106,6 +109,7 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
 class AttachmentList(generics.ListCreateAPIView):
     queryset = models.Attachment.objects.all()
     serializer_class = serializers.AttachmentSerializer
+    filterset_fields = ['violation', 'task', 'comment']
 
 
 class AttachmentDetail(generics.RetrieveDestroyAPIView):

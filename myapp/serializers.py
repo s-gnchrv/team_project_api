@@ -59,6 +59,12 @@ class ViolationTypeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class AttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Attachment
+        fields = ('file',)
+
+
 class ViolationSerializer(serializers.ModelSerializer):
     creator = serializers.ReadOnlyField(source='creator.id')
     type = ViolationTypeSerializer()
@@ -75,6 +81,7 @@ class TaskSerializer(serializers.ModelSerializer):
     executor = UserSerializer()
     violation = ViolationSerializer()
     organization = OrganizationSerializer()
+    attachments = AttachmentSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Task
@@ -82,15 +89,15 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.id')
+    # task = serializers.ReadOnlyField(source='task.id')
+
     class Meta:
         model = models.Comment
         fields = '__all__'
 
 
-class AttachmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Attachment
-        fields = ('file',)
+
 
 
 

@@ -126,9 +126,9 @@ class Attachment(models.Model):
         verbose_name_plural = 'Вложения'
 
     file = models.FileField(verbose_name='Файл', upload_to='attachments/')
-    violation = models.ForeignKey(Violation, verbose_name='Нарушение', on_delete=models.CASCADE, null=True, blank=True)
-    task = models.ForeignKey(Task, verbose_name='Задание', on_delete=models.CASCADE, null=True, blank=True)
-    comment = models.ForeignKey(Comment, verbose_name='Комментарий', on_delete=models.CASCADE, null=True, blank=True)
+    violation = models.ForeignKey(Violation, verbose_name='Нарушение', related_name='attachments', on_delete=models.CASCADE, null=True, blank=True)
+    task = models.ForeignKey(Task, verbose_name='Задание', related_name='attachments', on_delete=models.CASCADE, null=True, blank=True)
+    comment = models.ForeignKey(Comment, verbose_name='Комментарий', related_name='attachments', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.file.name
