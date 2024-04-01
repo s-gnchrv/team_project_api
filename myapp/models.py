@@ -20,9 +20,9 @@ class Project(models.Model):
         verbose_name = 'Объект строительства'
         verbose_name_plural = 'Объекты строительства'
 
-    name = models.CharField(verbose_name='Наименование', max_length=100)
-    address = models.CharField(verbose_name='Адрес', max_length=100)
-    description = models.CharField(verbose_name='Описание', max_length=100)
+    name = models.CharField(verbose_name='Наименование')
+    address = models.CharField(verbose_name='Адрес')
+    description = models.TextField(verbose_name='Описание')
 
     def __str__(self):
         return self.name
@@ -48,7 +48,7 @@ class ViolationType(models.Model):
         verbose_name = 'Тип нарушения'
         verbose_name_plural = 'Классификатор нарушений'
 
-    title = models.CharField(verbose_name='Наименование', max_length=50)
+    title = models.CharField(verbose_name='Наименование')
 
     def __str__(self):
         return self.title
@@ -66,13 +66,13 @@ class Violation(models.Model):
         (3, "Устранено"),
     )
 
-    title = models.CharField(verbose_name='Наименование', max_length=100)
+    title = models.CharField(verbose_name='Наименование')
     date = models.DateTimeField(verbose_name='Дата', auto_now_add=True)
     status = models.IntegerField(verbose_name='Статус', choices=status_types)
     creator = models.ForeignKey('auth.User', verbose_name='Представитель УСК', on_delete=models.CASCADE)
-    description = models.CharField(verbose_name='Описание', max_length=500)
+    description = models.TextField(verbose_name='Описание')
     type = models.ForeignKey(ViolationType, verbose_name='Тип нарушения', on_delete=models.CASCADE)
-    place = models.CharField(verbose_name='Место', max_length=50)
+    place = models.CharField(verbose_name='Место')
     project = models.ForeignKey(Project, verbose_name='Объект строительства', on_delete=models.CASCADE)
     organization = models.ForeignKey(Organization, verbose_name='Подрядная организация', on_delete=models.CASCADE)
 
@@ -100,7 +100,7 @@ class Task(models.Model):
     creator = models.ForeignKey('auth.User', verbose_name='Постановщик', related_name='created_tasks', on_delete=models.CASCADE)
     executor = models.ForeignKey('auth.User', verbose_name='Исполнитель', related_name='tasks', on_delete=models.CASCADE)
     organization = models.ForeignKey(Organization, verbose_name='Подрядная организация', on_delete=models.CASCADE)
-    description = models.CharField(verbose_name='Описание')
+    description = models.TextField(verbose_name='Описание')
 
     def __str__(self):
         return self.title
@@ -112,7 +112,7 @@ class Comment(models.Model):
         verbose_name_plural = 'Комментарии'
 
     author = models.ForeignKey('auth.User', verbose_name='Автор', on_delete=models.CASCADE)
-    text = models.CharField(verbose_name='Текст')
+    text = models.TextField(verbose_name='Текст')
     date = models.DateTimeField(verbose_name='Дата', auto_now_add=True)
     task = models.ForeignKey(Task, verbose_name='Задание', on_delete=models.CASCADE)
 
